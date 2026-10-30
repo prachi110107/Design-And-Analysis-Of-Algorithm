@@ -1,49 +1,39 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include <algorithm>
 using namespace std;
 
 int main() {
-    int n, W;
+    string X, Y;
 
-    cout << "Enter number of items: ";
-    cin >> n;
+    cout << "Enter first string: ";
+    cin >> X;
 
-    vector<int> wt(n), val(n);
+    cout << "Enter second string: ";
+    cin >> Y;
 
-    cout << "Enter weights of items:\n";
-    for (int i = 0; i < n; i++) {
-        cin >> wt[i];
-    }
+    int m = X.length();
+    int n = Y.length();
 
-    cout << "Enter profits of items:\n";
-    for (int i = 0; i < n; i++) {
-        cin >> val[i];
-    }
+    vector<vector<int>> dp(m + 1,
+                           vector<int>(n + 1, 0));
 
-    cout << "Enter knapsack capacity: ";
-    cin >> W;
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
 
-    vector<vector<int>> dp(n + 1,
-                           vector<int>(W + 1, 0));
-
-    for (int i = 1; i <= n; i++) {
-        for (int w = 1; w <= W; w++) {
-
-            if (wt[i - 1] <= w) {
-                dp[i][w] = max(
-                    val[i - 1] + dp[i - 1][w - wt[i - 1]],
-                    dp[i - 1][w]
-                );
+            if (X[i - 1] == Y[j - 1]) {
+                dp[i][j] = 1 + dp[i - 1][j - 1];
             }
             else {
-                dp[i][w] = dp[i - 1][w];
+                dp[i][j] = max(dp[i - 1][j],
+                               dp[i][j - 1]);
             }
         }
     }
 
-    cout << "Maximum profit: " << dp[n][W] << endl;
+    cout << "Length of LCS: " << dp[m][n] << endl;
 
     return 0;
 }
